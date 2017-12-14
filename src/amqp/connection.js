@@ -77,7 +77,12 @@ function trim( x ) {
 
 var Adapter = function( parameters ) {
 	var uriOpts = parseUri( parameters.uri );
-	_.merge( parameters, uriOpts );
+
+	if (Object.isFrozen(parameters)) {
+	  parameters = _.clone(parameters);
+	}
+	parameters = _.merge( parameters, uriOpts );
+
 	var hosts = getOption( parameters, "host" );
 	var servers = getOption( parameters, "server" );
 	var brokers = getOption( parameters, "RABBIT_BROKER" );
