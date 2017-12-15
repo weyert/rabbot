@@ -27,22 +27,24 @@ function aliasOptions( options, aliases ) {
 }
 
 function define( channel, options, connectionName ) {
-	var valid = aliasOptions( options, {
-		alternate: "alternateExchange"
-	}, "limit", "persistent", "publishTimeout" );
-	topLog.info( "Declaring %s exchange '%s' on connection '%s' with the options: %s",
-		options.type,
-		options.name,
-		connectionName,
-		JSON.stringify( _.omit( valid, [ "name", "type" ] ) )
-	);
-  if( options.name === "" ) {
-    return Promise.resolve( true );
-  } else if( options.passive ) {
-    return channel.checkExchange( options.name );
-  } else {
-    return channel.assertExchange( options.name, options.type, valid );
-  }
+  	var valid = aliasOptions( options, {
+		alternate: "alternateExchange",
+		arguments: "arguments",
+	}, "limit", "persistent", "publishTimeout",
+  	);
+  	topLog.info( "Declaring %s exchange '%s' on connection '%s' with the options: %s",
+	  options.type,
+	  options.name,
+	  connectionName,
+	  JSON.stringify( _.omit( valid, [ "name", "type" ] ) )
+  	);
+	if( options.name === "" ) {
+		return Promise.resolve( true );
+	} else if( options.passive ) {
+		return channel.checkExchange( options.name );
+	} else {
+		return channel.assertExchange( options.name, options.type, valid );
+	}
 }
 
 function getContentType( message ) {
